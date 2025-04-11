@@ -21,6 +21,10 @@ def index():
     conn.close()
     return render_template('index.html', guides=guides)
 
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 @app.route('/add', methods=['GET', 'POST'])
 def add_guide():
     if request.method == 'POST':
