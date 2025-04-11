@@ -1,170 +1,72 @@
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f2f2f2;
-    margin: 0;
-    padding: 0;
-}
-
-header {
-    background-color: #6a5acd;
-    color: white;
+    font-family: 'Noto Sans KR', sans-serif;
     padding: 20px;
-    text-align: center;
-    position: relative;
+    background: #f4f4f4;
 }
-
-h1 {
-    margin: 0;
-}
-
 nav {
-    margin-top: 10px;
-}
-
-.menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
     display: flex;
-    justify-content: center;
-    gap: 40px;
+    gap: 30px;
+    margin-bottom: 20px;
 }
-
-.menu > li {
+.menu {
     position: relative;
-    cursor: pointer;
 }
-
+.menu:hover .submenu {
+    display: block;
+}
 .submenu {
     display: none;
     position: absolute;
-    background-color: white;
-    color: #333;
-    list-style: none;
-    padding: 10px;
-    top: 100%;
-    left: 0;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    z-index: 1;
+    top: 20px;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-
-.menu > li:hover .submenu {
+.submenu a {
     display: block;
-}
-
-.submenu li {
     padding: 5px 10px;
-    white-space: nowrap;
-}
-
-.submenu li a {
-    color: #333;
     text-decoration: none;
 }
-
 .filters {
-    margin-top: 15px;
-}
-
-.filters select {
-    padding: 6px 10px;
-    margin: 0 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-.add-button-container {
-    margin-top: 15px;
-}
-
-.add-button {
-    background-color: #28a745;
-    color: white;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    display: inline-block;
-}
-
-.add-button:hover {
-    background-color: #218838;
-}
-
-main {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 20px;
-    gap: 20px;
-}
-
-.card {
-    background-color: white;
-    width: 280px;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    overflow: hidden;
-    transition: transform 0.2s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-}
-
-.card-image {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-}
-
-.card-content {
-    padding: 15px;
-}
-
-.card-content h2 {
-    margin: 0;
-    font-size: 20px;
-    color: #333;
-}
-
-.card-content p {
-    margin-top: 8px;
-    color: #555;
-    font-size: 14px;
-}
-
-.card-actions {
     display: flex;
     justify-content: space-between;
-    padding: 10px 15px 15px 15px;
+    align-items: center;
+    margin-bottom: 20px;
 }
-
-.edit-button, .delete-button {
-    padding: 6px 12px;
-    border-radius: 5px;
-    color: white;
+.btn {
+    background: #007bff;
+    color: #fff;
+    padding: 8px 12px;
     text-decoration: none;
+    border-radius: 5px;
+}
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.card {
+    width: 200px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    text-align: center;
+}
+.card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+.card h3 {
+    font-size: 18px;
+    margin: 10px 0 5px;
+}
+.card .date {
     font-size: 14px;
-    margin-right: 5px;
+    color: #666;
 }
-
-.edit-button {
-    background-color: #3498db;
-    border: none;
-}
-
-.edit-button:hover {
-    background-color: #2980b9;
-}
-
-.delete-button {
-    background-color: #e74c3c;
-    border: none;
-    cursor: pointer;
-}
-
-.delete-button:hover {
-    background-color: #c0392b;
+.actions {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
 }

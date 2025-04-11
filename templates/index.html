@@ -2,68 +2,58 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>힐링팬더 - 공략 모음</title>
+    <title>힐링팬더 공략 모음</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header>
-        <h1>힐링팬더 공략 모음</h1>
-        <nav>
-            <ul class="menu">
-                <li>
-                    프리코네
-                    <ul class="submenu">
-                        <li><a href="#">이벤트 정보</a></li>
-                        <li><a href="#">픽업 정보</a></li>
-                        <li><a href="#">사이드 스토리</a></li>
-                    </ul>
-                </li>
-                <li>
-                    소녀전선2
-                    <ul class="submenu">
-                        <li><a href="#">이벤트 정보</a></li>
-                        <li><a href="#">발주 정보</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-        <div class="filters">
-            <form method="GET" action="/">
+    <nav>
+        <div class="menu">
+            <span>프리코네</span>
+            <div class="submenu">
+                <a href="?category=이벤트 정보">이벤트 정보</a>
+                <a href="?category=픽업 정보">픽업 정보</a>
+                <a href="?category=사이드 스토리">사이드 스토리</a>
+            </div>
+        </div>
+        <div class="menu">
+            <span>소녀전선2</span>
+            <div class="submenu">
+                <a href="?category=이벤트 정보">이벤트 정보</a>
+                <a href="?category=발주 정보">발주 정보</a>
+            </div>
+        </div>
+    </nav>
+    <div class="filters">
+        <form method="get">
+            <label>카테고리:
                 <select name="category" onchange="this.form.submit()">
-                    <option value="">카테고리 전체</option>
-                    {% for category in categories %}
-                        <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ category }}</option>
+                    <option value="">전체</option>
+                    {% for c in categories %}
+                        <option value="{{ c }}" {% if selected_category == c %}selected{% endif %}>{{ c }}</option>
                     {% endfor %}
                 </select>
-                <select name="status" onchange="this.form.submit()">
-                    <option value="">전체</option>
-                    <option value="ongoing" {% if status == 'ongoing' %}selected{% endif %}>진행중</option>
-                </select>
-            </form>
-        </div>
-        <div class="add-button-container">
-            <a href="{{ url_for('add_guide') }}" class="add-button">공략 추가</a>
-        </div>
-    </header>
-
-    <main>
+            </label>
+            <label>
+                <input type="radio" name="status" value="" {% if not status %}checked{% endif %} onchange="this.form.submit()"> 전체
+                <input type="radio" name="status" value="ongoing" {% if status == 'ongoing' %}checked{% endif %} onchange="this.form.submit()"> 진행중
+            </label>
+        </form>
+        <a href="{{ url_for('add_guide') }}" class="btn">공략 추가</a>
+    </div>
+    <div class="card-container">
         {% for guide in guides %}
         <div class="card">
-            {% if guide[5] %}
-                <img src="{{ url_for('uploaded_file', filename=guide[5]) }}" alt="Card Image" class="card-image">
-            {% endif %}
-            <div class="card-content">
-                <h2>{{ guide[1] }}</h2>
-                <p><strong>기간:</strong> {{ guide[3] }} ~ {{ guide[4] }}</p>
-            </div>
-            <div class="card-actions">
-                <a href="{{ url_for('edit_guide', guide_id=guide[0]) }}" class="edit-button">수정</a>
-                <form method="POST" action="{{ url_for('delete_guide', guide_id=guide[0]) }}" onsubmit="return confirm('정말 삭제할까요?');" style="display:inline;">
-                    <button type="submit" class="delete-button">삭제</button>
+            <img src="{{ url_for('uploaded_file', filename=guide['image']) }}" alt="{{ guide['title'] }}">
+            <h3>{{ guide['title'] }}</h3>
+            <p class="date">{{ guide['start_date'][:16].replace('T', ' ') }} ~ {{ guide['end_date'][:16].replace('T', ' ') }}</p>
+            <div class="actions">
+                <a href="{{ url_for('edit_guide', guide_id=guide['id']) }}">수정</a>
+                <form action="{{ url_for('delete_guide', guide_id=guide['id']) }}" method="post" style="display:inline;">
+                    <button type="submit">삭제</button>
                 </form>
             </div>
         </div>
         {% endfor %}
-    </main>
+    </div>
 </body>
 </html>
