@@ -1,119 +1,89 @@
-import os
-import sqlite3
 from flask import Flask, render_template, request, redirect, url_for
-from werkzeug.utils import secure_filename
+import sqlite3
 from datetime import datetime
+import os
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
-
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-@app.template_filter('format_datetime')
-def format_datetime(value):
-    if not value:
-        return ''
-    dt = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
-    return dt.strftime("%Y년 %m월 %d일 %H:%M")
+UPLOAD_FOLDER = 'static/uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
 def index():
+    filter_type = request.args.get('filter', 'all')
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
-    c.execute("SELECT * FROM guides ORDER BY start_date DESC")
+
+    if filter_type == 'ongoing':
+        today = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        c.execute("SELECT * FROM guides WHERE end_date >= ?", (today,))
+    else:
+        c.execute("SELECT * FROM guides")
+
     guides = c.fetchall()
     conn.close()
     return render_template('index.html', guides=guides)
 
-@app.route('/create', methods=['GET', 'POST'])
-def create():
+@app.route('/add', methods=['GET', 'POST'])
+def add_guide():
     if request.method == 'POST':
         title = request.form['title']
         category = request.form['category']
+        custom_category = request.form.get('custom_category')
+        final_category = custom_category if category == 'custom' and custom_category else category
         content = request.form['content']
-        start_date = request.form.get('start_date')
-        end_date = request.form.get('end_date')
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
 
-        start_dt = datetime.strptime(start_date, "%Y-%m-%dT%H:%M") if start_date else None
-        end_dt = datetime.strptime(end_date, "%Y-%m-%dT%H:%M") if end_date else None
-
+        image = request.files['image']
         image_url = ''
-        file = request.files['image']
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
-            image_url = url_for('static', filename=f'uploads/{filename}')
+        if image:
+            image_path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+            image.save(image_path)
+            image_url = '/' + image_path.replace('\\', '/')
 
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("""
-            INSERT INTO guides (title, category, content, image_url, start_date, end_date)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (title, category, content, image_url, start_dt, end_dt))
+        c.execute("INSERT INTO guides (title, category, content, image_url, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?)",
+                  (title, final_category, content, image_url, start_date, end_date))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('index'))
+    return render_template('add.html')
+
+@app.route('/edit/<int:guide_id>', methods=['GET', 'POST'])
+def edit_guide(guide_id):
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+
+    if request.method == 'POST':
+        title = request.form['title']
+        category = request.form['category']
+        custom_category = request.form.get('custom_category')
+        final_category = custom_category if category == 'custom' and custom_category else category
+        content = request.form['content']
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+
+        image = request.files['image']
+        image_url = request.form['existing_image_url']
+        if image:
+            image_path = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
+            image.save(image_path)
+            image_url = '/' + image_path.replace('\\', '/')
+
+        c.execute("UPDATE guides SET title=?, category=?, content=?, image_url=?, start_date=?, end_date=? WHERE id=?",
+                  (title, final_category, content, image_url, start_date, end_date, guide_id))
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
 
-    return render_template('create.html')
-
-@app.route('/edit/<int:guide_id>', methods=['GET', 'POST'])
-def edit(guide_id):
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
     c.execute("SELECT * FROM guides WHERE id=?", (guide_id,))
     guide = c.fetchone()
     conn.close()
-
-    if not guide:
-        return "Guide not found", 404
-
-    if request.method == 'POST':
-        title = request.form['title']
-        category = request.form['category']
-        content = request.form['content']
-        start_date = request.form.get('start_date')
-        end_date = request.form.get('end_date')
-
-        start_dt = datetime.strptime(start_date, "%Y-%m-%dT%H:%M") if start_date else None
-        end_dt = datetime.strptime(end_date, "%Y-%m-%dT%H:%M") if end_date else None
-
-        image_url = guide[4]  # 기존 이미지
-        file = request.files['image']
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
-            image_url = url_for('static', filename=f'uploads/{filename}')
-
-        conn = sqlite3.connect('database.db')
-        c = conn.cursor()
-        c.execute("""
-            UPDATE guides SET title=?, category=?, content=?, image_url=?, start_date=?, end_date=? WHERE id=?
-        """, (title, category, content, image_url, start_dt, end_dt, guide_id))
-        conn.commit()
-        conn.close()
-
-        return redirect(url_for('index'))
-
-    guide_data = {
-        'id': guide[0],
-        'title': guide[1],
-        'category': guide[2],
-        'content': guide[3],
-        'image_url': guide[4],
-        'start_date': guide[5],
-        'end_date': guide[6]
-    }
-
-    return render_template('edit.html', guide=guide_data)
+    return render_template('edit.html', guide=guide)
 
 if __name__ == '__main__':
     import os
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     port = int(os.environ.get('PORT', 5000))  # Render는 환경변수 PORT를 사용
     app.run(host='0.0.0.0', port=port)

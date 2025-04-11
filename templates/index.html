@@ -1,50 +1,44 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>힐링팬더 - 게임 공략</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <title>힐링팬더 공략</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>🎮 힐링팬더 게임 공략 모음</h1>
+  <nav class="navbar">
+    <ul class="menu">
+      <li>프리코네
+        <ul class="submenu">
+          <li><a href="#">이벤트 정보</a></li>
+          <li><a href="#">픽업 정보</a></li>
+          <li><a href="#">사이드 스토리</a></li>
+        </ul>
+      </li>
+      <li>소녀전선2
+        <ul class="submenu">
+          <li><a href="#">이벤트 정보</a></li>
+          <li><a href="#">발주 정보</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
 
-	<nav class="navbar">
-		  <ul class="menu">
-		    <li>
-		      프리코네
-		      <ul class="submenu">
-		        <li><a href="#">이벤트 정보</a></li>
-		        <li><a href="#">픽업 정보</a></li>
-		        <li><a href="#">사이드 스토리</a></li>
-		      </ul>
-		    </li>
-		    <li>
-		      소녀전선2
-		      <ul class="submenu">
-		        <li><a href="#">이벤트 정보</a></li>
-		        <li><a href="#">발주 정보</a></li>
-		      </ul>
-		    </li>
-		  </ul>
-	</nav>
+  <div class="filter-buttons">
+    <a href="/" class="filter-btn">전체</a>
+    <a href="/?filter=ongoing" class="filter-btn">진행중</a>
+    <a href="/add" class="add-btn">+ 공략 추가</a>
+  </div>
 
-    <a href="{{ url_for('create') }}" class="button">➕ 공략 추가</a>
-
-    <div class="guide-container">
-        {% for guide in guides %}
-        <div class="guide-card">
-            {% if guide[4] %}
-                <img src="{{ guide[4] }}" alt="Guide Image">
-            {% endif %}
-            <h2>{{ guide[1] }}</h2>
-            <p><strong>카테고리:</strong> {{ guide[2] }}</p>
-            <p>{{ guide[3][:100] }}...</p>
-            <p class="date-range">
-                {{ guide[5] | format_datetime }} ~ {{ guide[6] | format_datetime }}
-            </p>
-            <a href="{{ url_for('edit', guide_id=guide[0]) }}" class="edit-button"✏️ 수정</a>
-        </div>
-        {% endfor %}
-    </div>
+  <div class="card-container">
+    {% for guide in guides %}
+      <div class="card">
+        <img src="{{ guide[4] or '/static/default.jpg' }}" alt="Guide Image">
+        <h2>{{ guide[1] }}</h2>
+        <p class="date-range">{{ guide[5][:10] }} ~ {{ guide[6][:10] }}</p>
+        <a href="/edit/{{ guide[0] }}" class="edit-button">수정</a>
+      </div>
+    {% endfor %}
+  </div>
 </body>
 </html>

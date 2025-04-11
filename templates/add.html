@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>공략 작성</title>
+</head>
+<body>
+  <h1>공략 추가</h1>
+  <form method="POST" enctype="multipart/form-data">
+    <label>제목:</label><br>
+    <input type="text" name="title" required><br><br>
+
+    <label for="category">카테고리 선택:</label>
+    <select id="category" name="category" onchange="checkCustomCategory()">
+      <option value="">-- 선택하세요 --</option>
+      <option value="프리코네 > 이벤트 정보">프리코네 > 이벤트 정보</option>
+      <option value="프리코네 > 픽업 정보">프리코네 > 픽업 정보</option>
+      <option value="프리코네 > 사이드 스토리">프리코네 > 사이드 스토리</option>
+      <option value="소녀전선2 > 이벤트 정보">소녀전선2 > 이벤트 정보</option>
+      <option value="소녀전선2 > 발주 정보">소녀전선2 > 발주 정보</option>
+      <option value="custom">직접 입력</option>
+    </select><br><br>
+    <div id="customCategoryField" style="display:none;">
+      <label>직접 입력:</label><br>
+      <input type="text" id="custom_category" name="custom_category"><br><br>
+    </div>
+
+    <label>내용:</label><br>
+    <textarea name="content" rows="5"></textarea><br><br>
+
+    <label>시작일:</label>
+    <input type="datetime-local" name="start_date"><br><br>
+
+    <label>종료일:</label>
+    <input type="datetime-local" name="end_date"><br><br>
+
+    <label>카드 이미지 업로드:</label>
+    <input type="file" name="image"><br><br>
+
+    <input type="submit" value="등록">
+  </form>
+
+  <script>
+    function checkCustomCategory() {
+      const category = document.getElementById("category").value;
+      const customField = document.getElementById("customCategoryField");
+      customField.style.display = category === "custom" ? "block" : "none";
+    }
+  </script>
+</body>
+</html>
