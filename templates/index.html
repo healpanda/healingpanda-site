@@ -1,44 +1,69 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>힐링팬더 공략</title>
-  <link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8">
+    <title>힐링팬더 - 공략 모음</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <nav class="navbar">
-    <ul class="menu">
-      <li>프리코네
-        <ul class="submenu">
-          <li><a href="#">이벤트 정보</a></li>
-          <li><a href="#">픽업 정보</a></li>
-          <li><a href="#">사이드 스토리</a></li>
-        </ul>
-      </li>
-      <li>소녀전선2
-        <ul class="submenu">
-          <li><a href="#">이벤트 정보</a></li>
-          <li><a href="#">발주 정보</a></li>
-        </ul>
-      </li>
-    </ul>
-  </nav>
+    <header>
+        <h1>힐링팬더 공략 모음</h1>
+        <nav>
+            <ul class="menu">
+                <li>
+                    프리코네
+                    <ul class="submenu">
+                        <li><a href="#">이벤트 정보</a></li>
+                        <li><a href="#">픽업 정보</a></li>
+                        <li><a href="#">사이드 스토리</a></li>
+                    </ul>
+                </li>
+                <li>
+                    소녀전선2
+                    <ul class="submenu">
+                        <li><a href="#">이벤트 정보</a></li>
+                        <li><a href="#">발주 정보</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div class="filters">
+            <form method="GET" action="/">
+                <select name="category" onchange="this.form.submit()">
+                    <option value="">카테고리 전체</option>
+                    {% for category in categories %}
+                        <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ category }}</option>
+                    {% endfor %}
+                </select>
+                <select name="status" onchange="this.form.submit()">
+                    <option value="">전체</option>
+                    <option value="ongoing" {% if status == 'ongoing' %}selected{% endif %}>진행중</option>
+                </select>
+            </form>
+        </div>
+        <div class="add-button-container">
+            <a href="{{ url_for('add_guide') }}" class="add-button">공략 추가</a>
+        </div>
+    </header>
 
-  <div class="filter-buttons">
-    <a href="/" class="filter-btn">전체</a>
-    <a href="/?filter=ongoing" class="filter-btn">진행중</a>
-    <a href="/add" class="add-btn">+ 공략 추가</a>
-  </div>
-
-  <div class="card-container">
-    {% for guide in guides %}
-      <div class="card">
-        <img src="{{ guide[4] or '/static/default.jpg' }}" alt="Guide Image">
-        <h2>{{ guide[1] }}</h2>
-        <p class="date-range">{{ guide[5][:10] }} ~ {{ guide[6][:10] }}</p>
-        <a href="/edit/{{ guide[0] }}" class="edit-button">수정</a>
-      </div>
-    {% endfor %}
-  </div>
+    <main>
+        {% for guide in guides %}
+        <div class="card">
+            {% if guide[5] %}
+                <img src="{{ url_for('uploaded_file', filename=guide[5]) }}" alt="Card Image" class="card-image">
+            {% endif %}
+            <div class="card-content">
+                <h2>{{ guide[1] }}</h2>
+                <p><strong>기간:</strong> {{ guide[3] }} ~ {{ guide[4] }}</p>
+            </div>
+            <div class="card-actions">
+                <a href="{{ url_for('edit_guide', guide_id=guide[0]) }}" class="edit-button">수정</a>
+                <form method="POST" action="{{ url_for('delete_guide', guide_id=guide[0]) }}" onsubmit="return confirm('정말 삭제할까요?');" style="display:inline;">
+                    <button type="submit" class="delete-button">삭제</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </main>
 </body>
 </html>
