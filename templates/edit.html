@@ -2,23 +2,37 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>공략 수정 - 힐링팬더</title>
+    <title>공략 수정</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header>
-        <h1>공략 수정</h1>
-    </header>
+    <h1>공략 수정하기</h1>
+    <form action="{{ url_for('edit', guide_id=guide.id) }}" method="post" enctype="multipart/form-data">
+        <label>제목:</label>
+        <input type="text" name="title" value="{{ guide.title }}" required><br>
 
-    <div class="container form-page">
-        <form method="POST">
-            <input type="text" name="title" value="{{ guide['title'] }}" required>
-            <input type="text" name="category" value="{{ guide['category'] }}">
-            <input type="text" name="image_url" value="{{ guide['image_url'] }}">
-            <textarea name="content" rows="8" required>{{ guide['content'] }}</textarea>
-            <button type="submit">수정 완료</button>
-        </form>
-        <a href="{{ url_for('guide', guide_id=guide['id']) }}">← 돌아가기</a>
-    </div>
+        <label>카테고리:</label>
+        <input type="text" name="category" value="{{ guide.category }}"><br>
+
+        <label>내용:</label><br>
+        <textarea name="content" rows="10" required>{{ guide.content }}</textarea><br>
+
+        <label>시작일:</label>
+        <input type="datetime-local" name="start_date" value="{{ guide.start_date|replace(' ', 'T') }}"><br>
+
+        <label>종료일:</label>
+        <input type="datetime-local" name="end_date" value="{{ guide.end_date|replace(' ', 'T') }}"><br>
+
+        <label>현재 이미지:</label><br>
+        {% if guide.image_url %}
+            <img src="{{ guide.image_url }}" width="300"><br>
+        {% endif %}
+        <label>이미지 변경:</label>
+        <input type="file" name="image"><br><br>
+
+        <button type="submit">수정 완료</button>
+    </form>
+    <br>
+    <a href="{{ url_for('index') }}">← 돌아가기</a>
 </body>
 </html>

@@ -1,34 +1,51 @@
 import sqlite3
+from datetime import datetime
 
 # DB 연결
-conn = sqlite3.connect('guides.db')
+conn = sqlite3.connect('database.db')
 c = conn.cursor()
 
-# 기존 테이블 삭제 (있을 경우)
-c.execute('DROP TABLE IF EXISTS guides')
-
-# 새로운 guides 테이블 생성 (image_url 추가됨)
+# guides 테이블 생성
 c.execute('''
-CREATE TABLE guides (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    category TEXT,
-    image_url TEXT,
-    content TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
+    CREATE TABLE IF NOT EXISTS guides (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        category TEXT,
+        content TEXT NOT NULL,
+        image_url TEXT,
+        start_date TEXT,
+        end_date TEXT
+    )
 ''')
 
-# 샘플 데이터 삽입 (이미지 URL 포함)
-c.execute("INSERT INTO guides (title, category, image_url, content) VALUES (?, ?, ?, ?)",
-          ('캐러밴 시즌 3', '이벤트', '/static/images/caravan.jpg', '동료와 대련이의 새롭고 짜릿한 공략'))
+# 예시 공략 데이터 삽입
+sample_data = [
+    (
+        '초보자를 위한 프리코네 가이드',
+        '프리코네',
+        '이 공략은 프리코네를 처음 시작하는 유저를 위한 팁들을 모았습니다.',
+        '/static/images/clan.jpg',  # static 폴더에 이미지가 있다고 가정
+        '2025-04-10 10:00:00',
+        '2025-04-30 22:00:00'
+    ),
+    (
+        '아레나 공략 - 캐릭터 조합 추천',
+        '아레나',
+        '강력한 캐릭터 조합을 통해 아레나에서 승리하는 법!',
+        '/static/images/luna.jpg',
+        '2025-04-05 09:30:00',
+        '2025-04-20 21:00:00'
+    )
+]
 
-c.execute("INSERT INTO guides (title, category, image_url, content) VALUES (?, ?, ?, ?)",
-          ('루나의 탑', '던전', '/static/images/luna.jpg', '루나의 탑 공략: 적 구성, 추천 조합, 보상 정리'))
+# 데이터 삽입
+c.executemany('''
+    INSERT INTO guides (title, category, content, image_url, start_date, end_date)
+    VALUES (?, ?, ?, ?, ?, ?)
+''', sample_data)
 
-c.execute("INSERT INTO guides (title, category, image_url, content) VALUES (?, ?, ?, ?)",
-          ('4월 클랜전', '클랜전', '/static/images/clan.jpg', '클랜 보스별 패턴 정리 및 딜 순서'))
-
-# 저장하고 닫기
+# 저장 및 종료
 conn.commit()
 conn.close()
+
+print("✅ guides 테이블과 초기 데이터가 성공적으로 생성되었습니다.")

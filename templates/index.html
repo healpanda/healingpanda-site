@@ -2,28 +2,27 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>힐링팬더 - 게임 공략 모음</title>
+    <title>힐링팬더 - 게임 공략</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header>
-        <h1>힐링팬더 🐼</h1>
-        <a href="{{ url_for('create') }}" class="write-button">✍ 공략 작성하기</a>
-    </header>
+    <h1>🎮 힐링팬더 게임 공략 모음</h1>
 
-    <div class="grid-container">
+    <a href="{{ url_for('create') }}" class="button">➕ 공략 추가</a>
+
+    <div class="guide-container">
         {% for guide in guides %}
-        <div class="card">
-            {% if guide.image_url %}
-            <img src="{{ guide.image_url }}" alt="{{ guide.title }}" class="card-image">
+        <div class="guide-card">
+            {% if guide[4] %}
+                <img src="{{ guide[4] }}" alt="Guide Image">
             {% endif %}
-            <div class="card-content">
-                <h2><a href="{{ url_for('guide', guide_id=guide['id']) }}">{{ guide.title }}</a></h2>
-                {% if guide.category %}
-                <p class="category">#{{ guide.category }}</p>
-                {% endif %}
-                <a href="{{ url_for('edit', guide_id=guide['id']) }}" class="edit-button">수정 ✏️</a>
-            </div>
+            <h2>{{ guide[1] }}</h2>
+            <p><strong>카테고리:</strong> {{ guide[2] }}</p>
+            <p>{{ guide[3][:100] }}...</p>
+            <p class="date-range">
+                {{ guide[5] | format_datetime }} ~ {{ guide[6] | format_datetime }}
+            </p>
+            <a href="{{ url_for('edit', guide_id=guide[0]) }}" class="edit-button">✏️ 수정</a>
         </div>
         {% endfor %}
     </div>
