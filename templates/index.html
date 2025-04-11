@@ -8,6 +8,26 @@
 <body>
     <h1>🎮 힐링팬더 게임 공략 모음</h1>
 
+	<nav class="navbar">
+		  <ul class="menu">
+		    <li>
+		      프리코네
+		      <ul class="submenu">
+		        <li><a href="#">이벤트 정보</a></li>
+		        <li><a href="#">픽업 정보</a></li>
+		        <li><a href="#">사이드 스토리</a></li>
+		      </ul>
+		    </li>
+		    <li>
+		      소녀전선2
+		      <ul class="submenu">
+		        <li><a href="#">이벤트 정보</a></li>
+		        <li><a href="#">발주 정보</a></li>
+		      </ul>
+		    </li>
+		  </ul>
+	</nav>
+
     <a href="{{ url_for('create') }}" class="button">➕ 공략 추가</a>
 
     <div class="guide-container">
@@ -22,7 +42,7 @@
             <p class="date-range">
                 {{ guide[5] | format_datetime }} ~ {{ guide[6] | format_datetime }}
             </p>
-            <a href="{{ url_for('edit', guide_id=guide[0]) }}" class="edit-button">✏️ 수정</a>
+            <a href="{{ url_for('edit', guide_id=guide[0]) }}" class="edit-button"✏️ 수정</a>
         </div>
         {% endfor %}
     </div>
