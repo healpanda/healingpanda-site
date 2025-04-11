@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import sqlite3
+import os
 
 app = Flask(__name__)
 
@@ -21,3 +22,7 @@ def guide(guide_id):
     guide = conn.execute('SELECT * FROM guides WHERE id = ?', (guide_id,)).fetchone()
     conn.close()
     return render_template('guide.html', guide=guide)
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)
