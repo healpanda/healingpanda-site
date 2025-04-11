@@ -2,32 +2,30 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>힐링팬더 공략</title>
+    <title>힐링팬더 - 게임 공략 모음</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header>
-        <h1>힐링팬더 공략</h1>
-        <p>최신 게임 이벤트와 공략 정보를 카드 형태로 확인하세요!</p>
+        <h1>힐링팬더 🐼</h1>
+        <a href="{{ url_for('create') }}" class="write-button">✍ 공략 작성하기</a>
     </header>
 
-    <div class="container grid">
+    <div class="container">
         {% for guide in guides %}
-            <div class="card">
-                <a href="{{ url_for('guide', guide_id=guide[0]) }}">
-                    <img src="{{ guide[3] }}" alt="{{ guide[1] }}">
-                    <div class="card-body">
-                        <h2>{{ guide[1] }}</h2>
-                        <p class="category">{{ guide[2] }}</p>
-                        <p class="date">{{ guide[5][:10] }}</p>
-                    </div>
-                </a>
+        <div class="guide">
+            {% if guide.image_url %}
+            <img src="{{ guide.image_url }}" alt="{{ guide.title }}">
+            {% endif %}
+            <div class="guide-info">
+                <h2><a href="{{ url_for('guide', guide_id=guide['id']) }}">{{ guide.title }}</a></h2>
+                {% if guide.category %}
+                <p class="category">#{{ guide.category }}</p>
+                {% endif %}
+                <a href="{{ url_for('edit', guide_id=guide['id']) }}" class="edit-button">수정 ✏️</a>
             </div>
+        </div>
         {% endfor %}
     </div>
-
-    <footer>
-        &copy; 2025 힐링팬더. All rights reserved.
-    </footer>
 </body>
 </html>
