@@ -2,55 +2,47 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>힐링팬더 공략 모음</title>
+    <title>힐링팬더</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <nav>
-        <div class="menu">
-            <span>프리코네</span>
-            <div class="submenu">
-                <a href="?category=이벤트 정보">이벤트 정보</a>
-                <a href="?category=픽업 정보">픽업 정보</a>
-                <a href="?category=사이드 스토리">사이드 스토리</a>
-            </div>
-        </div>
-        <div class="menu">
-            <span>소녀전선2</span>
-            <div class="submenu">
-                <a href="?category=이벤트 정보">이벤트 정보</a>
-                <a href="?category=발주 정보">발주 정보</a>
-            </div>
-        </div>
-    </nav>
-    <div class="filters">
+    <header>
+        <h1>힐링팬더 🐼</h1>
+        <nav>
+            <a href="{{ url_for('index', main_category='프리코네') }}">프리코네</a>
+            <a href="{{ url_for('index', main_category='소녀전선2') }}">소녀전선2</a>
+        </nav>
+    </header>
+
+    <div class="filter-bar">
         <form method="get">
-            <label>카테고리:
-                <select name="category" onchange="this.form.submit()">
-                    <option value="">전체</option>
-                    {% for c in categories %}
-                        <option value="{{ c }}" {% if selected_category == c %}selected{% endif %}>{{ c }}</option>
-                    {% endfor %}
-                </select>
-            </label>
-            <label>
-                <input type="radio" name="status" value="" {% if not status %}checked{% endif %} onchange="this.form.submit()"> 전체
-                <input type="radio" name="status" value="ongoing" {% if status == 'ongoing' %}checked{% endif %} onchange="this.form.submit()"> 진행중
-            </label>
+            <label for="category">카테고리:</label>
+            <select name="category" id="category">
+                <option value="">전체</option>
+                {% for c in categories %}
+                    <option value="{{ c }}" {% if c == selected_category %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+            </select>
+            <label><input type="radio" name="status" value="all" {% if status == 'all' %}checked{% endif %}> 전체</label>
+            <label><input type="radio" name="status" value="ongoing" {% if status == 'ongoing' %}checked{% endif %}> 진행중</label>
+            <button type="submit">필터</button>
         </form>
-        <a href="{{ url_for('add_guide') }}" class="btn">공략 추가</a>
+        <a href="{{ url_for('add_guide') }}" class="add-button">공략 추가</a>
     </div>
+
     <div class="card-container">
         {% for guide in guides %}
         <div class="card">
-            <img src="{{ url_for('uploaded_file', filename=guide['image']) }}" alt="{{ guide['title'] }}">
-            <h3>{{ guide['title'] }}</h3>
-            <p class="date">{{ guide['start_date'][:16].replace('T', ' ') }} ~ {{ guide['end_date'][:16].replace('T', ' ') }}</p>
-            <div class="actions">
-                <a href="{{ url_for('edit_guide', guide_id=guide['id']) }}">수정</a>
-                <form action="{{ url_for('delete_guide', guide_id=guide['id']) }}" method="post" style="display:inline;">
-                    <button type="submit">삭제</button>
-                </form>
+            <img src="{{ url_for('uploaded_file', filename=guide.image) }}" alt="카드 이미지">
+            <div class="card-body">
+                <h3>{{ guide.title }}</h3>
+                <p>{{ guide.start_date.strftime('%Y-%m-%d %H:%M') }} ~ {{ guide.end_date.strftime('%Y-%m-%d %H:%M') }}</p>
+                <div class="card-actions">
+                    <a href="{{ url_for('edit_guide', guide_id=guide.id) }}">수정</a>
+                    <form method="post" action="{{ url_for('delete_guide', guide_id=guide.id) }}" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                        <button type="submit">삭제</button>
+                    </form>
+                </div>
             </div>
         </div>
         {% endfor %}
