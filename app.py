@@ -67,4 +67,6 @@ def edit(guide_id):
     return render_template('edit.html', guide=guide)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    import os
+    port = int(os.environ.get('PORT', 5000))  # Render는 환경변수 PORT를 사용
+    app.run(host='0.0.0.0', port=port)
