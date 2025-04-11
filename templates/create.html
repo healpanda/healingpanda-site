@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>공략 작성 - 힐링팬더</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>공략 작성</h1>
+    </header>
+
+    <div class="container form-page">
+        <form method="POST">
+            <input type="text" name="title" placeholder="제목" required>
+            <input type="text" name="category" placeholder="카테고리">
+            <input type="text" name="image_url" placeholder="이미지 URL">
+            <textarea name="content" placeholder="내용" rows="8" required></textarea>
+            <button type="submit">작성 완료</button>
+        </form>
+        <a href="{{ url_for('index') }}">← 돌아가기</a>
+    </div>
+</body>
+</html>

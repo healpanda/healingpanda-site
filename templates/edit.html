@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>공략 수정 - 힐링팬더</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>공략 수정</h1>
+    </header>
+
+    <div class="container form-page">
+        <form method="POST">
+            <input type="text" name="title" value="{{ guide['title'] }}" required>
+            <input type="text" name="category" value="{{ guide['category'] }}">
+            <input type="text" name="image_url" value="{{ guide['image_url'] }}">
+            <textarea name="content" rows="8" required>{{ guide['content'] }}</textarea>
+            <button type="submit">수정 완료</button>
+        </form>
+        <a href="{{ url_for('guide', guide_id=guide['id']) }}">← 돌아가기</a>
+    </div>
+</body>
+</html>
