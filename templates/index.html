@@ -11,13 +11,13 @@
         <a href="{{ url_for('create') }}" class="write-button">✍ 공략 작성하기</a>
     </header>
 
-    <div class="container">
+    <div class="grid-container">
         {% for guide in guides %}
-        <div class="guide">
+        <div class="card">
             {% if guide.image_url %}
-            <img src="{{ guide.image_url }}" alt="{{ guide.title }}">
+            <img src="{{ guide.image_url }}" alt="{{ guide.title }}" class="card-image">
             {% endif %}
-            <div class="guide-info">
+            <div class="card-content">
                 <h2><a href="{{ url_for('guide', guide_id=guide['id']) }}">{{ guide.title }}</a></h2>
                 {% if guide.category %}
                 <p class="category">#{{ guide.category }}</p>
