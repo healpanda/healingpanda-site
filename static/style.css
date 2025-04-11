@@ -44,3 +44,9 @@ header h1 {
 /* 컨테이너 */
 .container {
     max-width
+
+.guide img {
+    width: 160px;
+    border-radius: 10px;
+    object-fit: cover;
+}
