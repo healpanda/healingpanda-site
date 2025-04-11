@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>{{ guide.title }}</title>
+    <meta charset="UTF-8">
+    <title>{{ guide[1] }} - 힐링팬더</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <h1>{{ guide.title }}</h1>
-  <p><strong>카테고리:</strong> {{ guide.category }}</p>
-  <p>{{ guide.content }}</p>
-  <a href="/">← 목록으로</a>
+    <header>
+        <h1>{{ guide[1] }}</h1>
+        <p class="category">#{{ guide[2] }} &nbsp;|&nbsp; {{ guide[5][:10] }}</p>
+    </header>
+
+    <div class="container detail">
+        <img class="detail-img" src="{{ guide[3] }}" alt="{{ guide[1] }}">
+
+        <div class="guide-content">
+            <p>{{ guide[4] }}</p>
+        </div>
+
+        <div class="back-link">
+            <a href="{{ url_for('index') }}">← 목록으로 돌아가기</a>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 힐링팬더. All rights reserved.
+    </footer>
 </body>
 </html>
