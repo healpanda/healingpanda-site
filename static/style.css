@@ -1,3 +1,4 @@
+/* 전체 기본 설정 */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f7f8fa;
@@ -6,59 +7,83 @@ body {
     color: #333;
 }
 
+/* 헤더 */
 header {
     background-color: #4e5ba6;
     color: white;
-    padding: 20px;
+    padding: 30px 20px;
     text-align: center;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 h1 {
     margin: 0;
-    font-size: 2em;
+    font-size: 2.5em;
 }
 
+header p {
+    margin: 10px 0 0;
+    font-size: 1em;
+}
+
+/* 컨테이너 및 그리드 */
 .container {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 30px auto;
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    padding: 0 20px;
 }
 
-.guide {
-    padding: 15px;
-    border-bottom: 1px solid #eee;
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
 }
 
-.guide:last-child {
-    border-bottom: none;
-}
-
-.guide h2 {
-    font-size: 1.3em;
-    margin: 0;
-    color: #4e5ba6;
-}
-
-.guide p {
-    margin-top: 5px;
-    color: #555;
-}
-
-a {
+/* 카드 스타일 */
+.card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
     text-decoration: none;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+.card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card h2 {
+    font-size: 1.1em;
+    margin: 0 0 5px;
+    color: #333;
+}
+
+.card .category {
+    font-size: 0.9em;
     color: #4e5ba6;
+    font-weight: bold;
 }
 
-a:hover {
-    text-decoration: underline;
+.card .date {
+    font-size: 0.85em;
+    color: #999;
+    margin-top: 5px;
 }
 
+/* 푸터 */
 footer {
-    margin-top: 40px;
+    margin-top: 50px;
     padding: 20px;
     text-align: center;
     color: #999;

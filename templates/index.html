@@ -1,18 +1,33 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>힐링팬더 - 공략 모음</title>
-  <link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8">
+    <title>힐링팬더 공략</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <h1>힐링팬더 공략</h1>
-  <ul>
-    {% for guide in guides %}
-      <li>
-        <a href="/guide/{{ guide.id }}">{{ guide.title }} ({{ guide.category }})</a>
-      </li>
-    {% endfor %}
-  </ul>
+    <header>
+        <h1>힐링팬더 공략</h1>
+        <p>최신 게임 이벤트와 공략 정보를 카드 형태로 확인하세요!</p>
+    </header>
+
+    <div class="container grid">
+        {% for guide in guides %}
+            <div class="card">
+                <a href="{{ url_for('guide_detail', guide_id=guide[0]) }}">
+                    <img src="{{ guide[3] }}" alt="{{ guide[1] }}">
+                    <div class="card-body">
+                        <h2>{{ guide[1] }}</h2>
+                        <p class="category">{{ guide[2] }}</p>
+                        <p class="date">{{ guide[5][:10] }}</p>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <footer>
+        &copy; 2025 힐링팬더. All rights reserved.
+    </footer>
 </body>
 </html>
