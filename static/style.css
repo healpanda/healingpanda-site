@@ -156,3 +156,46 @@ a.button-link {
     background-color: #f44336;
     color: white;
 }
+
+.main-tabs {
+    display: flex;
+    justify-content: center;
+    background-color: #3949ab;
+    padding: 10px;
+}
+
+.main-tab {
+    background-color: #3949ab;
+    border: none;
+    color: white;
+    font-size: 16px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.main-tab:hover {
+    background-color: #5c6bc0;
+}
+
+.sub-tabs {
+    display: flex;
+    justify-content: center;
+    background-color: #e8eaf6;
+    padding: 10px;
+}
+
+.sub-tab {
+    background-color: #e8eaf6;
+    border: none;
+    color: #333;
+    font-size: 14px;
+    padding: 10px 16px;
+    cursor: pointer;
+}
+
+.sub-tab:hover {
+    background-color: #c5cae9;
+    border-radius: 5px;
+}
+
