@@ -2,35 +2,41 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>공략 수정</title>
+    <title>공략 수정 - 힐링팬더</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <h1>공략 수정</h1>
-    <form method="post" enctype="multipart/form-data">
+    <form action="{{ url_for('edit_guide', guide_id=guide['id']) }}" method="POST" enctype="multipart/form-data">
         <label>제목:</label><br>
-        <input type="text" name="title" value="{{ guide.title }}"><br><br>
+        <input type="text" name="title" value="{{ guide['title'] }}" required><br><br>
+
+        <label>설명:</label><br>
+        <textarea name="description">{{ guide['description'] }}</textarea><br><br>
 
         <label>카테고리 선택:</label><br>
         <select name="category">
-            {% for c in categories %}
-                <option value="{{ c }}" {% if guide.category == c %}selected{% endif %}>{{ c }}</option>
-            {% endfor %}
+            <option value="프리코네>이벤트 정보">프리코네 > 이벤트 정보</option>
+            <option value="프리코네>픽업 정보">프리코네 > 픽업 정보</option>
+            <option value="프리코네>사이드 스토리">프리코네 > 사이드 스토리</option>
+            <option value="소녀전선2>이벤트 정보">소녀전선2 > 이벤트 정보</option>
+            <option value="소녀전선2>발주 정보">소녀전선2 > 발주 정보</option>
         </select><br><br>
 
-        <label>새 카테고리 입력:</label><br>
+        <label>새 카테고리 추가:</label><br>
         <input type="text" name="new_category"><br><br>
 
         <label>시작일:</label><br>
-        <input type="datetime-local" name="start_date" value="{{ guide.start_date.strftime('%Y-%m-%dT%H:%M') }}"><br><br>
+        <input type="datetime-local" name="start_date" value="{{ guide['start_date'][:16] }}" required><br><br>
 
         <label>종료일:</label><br>
-        <input type="datetime-local" name="end_date" value="{{ guide.end_date.strftime('%Y-%m-%dT%H:%M') }}"><br><br>
+        <input type="datetime-local" name="end_date" value="{{ guide['end_date'][:16] }}" required><br><br>
 
-        <label>카드 이미지 변경 (선택):</label><br>
+        <label>이미지 변경:</label><br>
         <input type="file" name="image"><br><br>
 
-        <input type="submit" value="수정">
+        <button type="submit">수정</button>
+        <a href="{{ url_for('index') }}">취소</a>
     </form>
-    <a href="{{ url_for('index') }}">← 돌아가기</a>
 </body>
 </html>

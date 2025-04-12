@@ -1,32 +1,51 @@
 import sqlite3
+from datetime import datetime
 
-conn = sqlite3.connect('guides.db')
-cur = conn.cursor()
+def init_db():
+    conn = sqlite3.connect('guides.db')
+    c = conn.cursor()
 
-cur.execute('DROP TABLE IF EXISTS guides')
+    # guides 테이블 생성
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS guides (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            description TEXT,
+            category TEXT,
+            image_filename TEXT,
+            start_date TEXT,
+            end_date TEXT
+        )
+    ''')
 
-cur.execute('''
-CREATE TABLE guides (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    category TEXT,
-    start_date TEXT,
-    end_date TEXT,
-    image TEXT,
-    main_category TEXT
-)
-''')
+    # 초기 데이터 삽입
+    guides = [
+        (
+            "프리코네 여름 이벤트", 
+            "수영복 캐릭터들이 등장하는 한정 이벤트!", 
+            "프리코네>이벤트 정보", 
+            None,
+            datetime(2025, 4, 15, 10, 0).isoformat(),
+            datetime(2025, 4, 30, 23, 59).isoformat()
+        ),
+        (
+            "소녀전선2 발주 개시", 
+            "신규 장비 발주 이벤트 시작!", 
+            "소녀전선2>발주 정보", 
+            None,
+            datetime(2025, 4, 10, 0, 0).isoformat(),
+            datetime(2025, 4, 20, 23, 59).isoformat()
+        )
+    ]
 
-sample_guides = [
-    ('프리코네 이벤트 공략', '이벤트 정보', '2025-04-10 00:00', '2025-04-11 23:59', 'sample1.jpg', '프리코네'),
-    ('소녀전선2 초반 공략', '이벤트 정보', '2025-04-12 00:00', '2025-04-22 23:59', 'sample2.jpg', '소녀전선2'),
-    ('소녀전선2 발주 정리', '발주 정보', '2025-04-13 00:00', '2025-04-23 23:59', 'sample3.jpg', '소녀전선2')
-]
+    c.executemany('''
+        INSERT INTO guides (title, description, category, image_filename, start_date, end_date)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ''', guides)
 
-cur.executemany('''
-INSERT INTO guides (title, category, start_date, end_date, image, main_category)
-VALUES (?, ?, ?, ?, ?, ?)
-''', sample_guides)
+    conn.commit()
+    conn.close()
+    print("DB 초기화 완료 및 샘플 데이터 삽입 완료")
 
-conn.commit()
-conn.close()
+if __name__ == "__main__":
+    init_db()
