@@ -14,17 +14,17 @@
         <label>설명:</label><br>
         <textarea name="description">{{ guide['description'] }}</textarea><br><br>
 
-        <label>카테고리 선택:</label><br>
-        <select name="category">
-            <option value="프리코네>이벤트 정보">프리코네 > 이벤트 정보</option>
-            <option value="프리코네>픽업 정보">프리코네 > 픽업 정보</option>
-            <option value="프리코네>사이드 스토리">프리코네 > 사이드 스토리</option>
-            <option value="소녀전선2>이벤트 정보">소녀전선2 > 이벤트 정보</option>
-            <option value="소녀전선2>발주 정보">소녀전선2 > 발주 정보</option>
+        <label>상위 카테고리:</label><br>
+        <select name="main_category" id="main_category" onchange="updateSubcategories()" required>
+            <option value="">선택하세요</option>
+            <option value="프리코네" {% if guide['main_category'] == '프리코네' %}selected{% endif %}>프리코네</option>
+            <option value="소녀전선2" {% if guide['main_category'] == '소녀전선2' %}selected{% endif %}>소녀전선2</option>
         </select><br><br>
 
-        <label>새 카테고리 추가:</label><br>
-        <input type="text" name="new_category"><br><br>
+        <label>하위 카테고리:</label><br>
+        <select name="sub_category" id="sub_category" required>
+            <!-- JavaScript에서 동적으로 설정됨 -->
+        </select><br><br>
 
         <label>시작일:</label><br>
         <input type="datetime-local" name="start_date" value="{{ guide['start_date'][:16] }}" required><br><br>
@@ -38,5 +38,27 @@
         <button type="submit">수정</button>
         <a href="{{ url_for('index') }}">취소</a>
     </form>
-</body>
-</html>
+
+    <script>
+    const subcategoryOptions = {
+        "프리코네": ["이벤트 정보", "픽업 정보", "사이드 스토리"],
+        "소녀전선2": ["이벤트 정보", "발주 정보"]
+    };
+
+    function updateSubcategories() {
+        const main = document.getElementById("main_category").value;
+        const sub = document.getElementById("sub_category");
+        sub.innerHTML = "";
+
+        if (main && subcategoryOptions[main]) {
+            subcategoryOptions[main].forEach(option => {
+                const opt = document.createElement("option");
+                opt.value = option;
+                opt.text = option;
+                if (option === "{{ guide['sub_category'] }}") {
+                    opt.selected = true;
+                }
+                sub.appendChild(opt);
+            });
+        } else {
+            const opt = document.createElement("option

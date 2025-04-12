@@ -1,73 +1,80 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>힐링팬더 - 게임 공략 모음</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <title>힐링팬더 - 게임 공략 모음</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header>
-        <h1>힐링팬더</h1>
-	<!-- 상단 메뉴 -->
-	<div class="main-tabs">
-	  <button class="main-tab" onclick="showSubTabs('priconne')">프리코네</button>
-	  <button class="main-tab" onclick="showSubTabs('gf2')">소녀전선2</button>
-	</div>
+  <header>
+    <h1>힐링팬더</h1>
 
-	<!-- 하위 메뉴 -->
-	<div id="subtabs-priconne" class="sub-tabs">
-	  <button class="sub-tab">이벤트 정보</button>
-	  <button class="sub-tab">픽업 정보</button>
-	  <button class="sub-tab">사이드 스토리</button>	
-	</div>
+    <!-- 상위 탭 -->
+    <div class="main-tabs">
+      <button class="main-tab" onclick="showSubTabs('priconne')">프리코네</button>
+      <button class="main-tab" onclick="showSubTabs('gf2')">소녀전선2</button>
+    </div>
 
-	<div id="subtabs-gf2" class="sub-tabs" style="display: none;">
-	  <button class="sub-tab">이벤트 정보</button>
-	  <button class="sub-tab">발주 정보</button>
-	</div>
+    <!-- 하위 탭 -->
+    <div id="subtabs-priconne" class="sub-tabs">
+      <a href="/category/프리코네/이벤트 정보" class="sub-tab">이벤트 정보</a>
+      <a href="/category/프리코네/픽업 정보" class="sub-tab">픽업 정보</a>
+      <a href="/category/프리코네/사이드 스토리" class="sub-tab">사이드 스토리</a>
+    </div>
 
+    <div id="subtabs-gf2" class="sub-tabs" style="display: none;">
+      <a href="/category/소녀전선2/이벤트 정보" class="sub-tab">이벤트 정보</a>
+      <a href="/category/소녀전선2/발주 정보" class="sub-tab">발주 정보</a>
+    </div>
 
-        <nav>
-            <a href="{{ url_for('index') }}">전체</a> |
-            <a href="{{ url_for('index', filter='active') }}">진행중</a> |
-            <a href="{{ url_for('add_guide') }}">공략 추가</a>
-        </nav>
-    </header>
+    <!-- 상단 메뉴 -->
+    <nav>
+      <a href="{{ url_for('index') }}">전체</a> |
+      <a href="{{ url_for('index', filter='active') }}">진행중</a> |
+      <a href="{{ url_for('add_guide') }}">공략 추가</a>
+    </nav>
+  </header>
 
-    <main>
-        <div class="card-container">
-            {% for guide in guides %}
-            <div class="card">
-                {% if guide['image_filename'] %}
-                <img src="{{ url_for('uploaded_file', filename=guide['image_filename']) }}" alt="이미지">
-                {% endif %}
-                <div class="card-body">
-                    <h3>{{ guide['title'] }}</h3>
-                    <p>시작: {{ guide['start_date']|format_datetime }}</p>
-                    <p>종료: {{ guide['end_date']|format_datetime }}</p>
-                    <div class="card-actions">
-                        <a href="{{ url_for('edit_guide', guide_id=guide['id']) }}">수정</a>
-                        <form action="{{ url_for('delete_guide', guide_id=guide['id']) }}" method="POST">
-                            <button type="submit" onclick="return confirm('삭제하시겠습니까?');">삭제</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
+  <main>
+    {% if guides and guides[0]['main_category'] %}
+    <div class="selected-category">
+      현재 카테고리: <strong>{{ guides[0]['main_category'] }} > {{ guides[0]['sub_category'] }}</strong>
+    </div>
+    {% endif %}
+
+    <div class="card-container">
+      {% for guide in guides %}
+      <div class="card">
+        {% if guide['image_filename'] %}
+        <img src="{{ url_for('uploaded_file', filename=guide['image_filename']) }}" alt="이미지">
+        {% endif %}
+        <div class="card-body">
+          <h3>{{ guide['title'] }}</h3>
+          <p>시작: {{ guide['start_date']|format_datetime }}</p>
+          <p>종료: {{ guide['end_date']|format_datetime }}</p>
+          <div class="card-actions">
+            <a href="{{ url_for('edit_guide', guide_id=guide['id']) }}">수정</a>
+            <form action="{{ url_for('delete_guide', guide_id=guide['id']) }}" method="POST" style="display:inline;">
+              <button type="submit" onclick="return confirm('삭제하시겠습니까?');">삭제</button>
+            </form>
+          </div>
         </div>
-    </main>
-	<script>
-	function showSubTabs(target) {
-	  document.getElementById('subtabs-priconne').style.display = 'none';
-	  document.getElementById('subtabs-gf2').style.display = 'none';
+      </div>
+      {% endfor %}
+    </div>
+  </main>
 
-	  if (target === 'priconne') {
-	    document.getElementById('subtabs-priconne').style.display = 'flex';
-	  } else if (target === 'gf2') {
-	    document.getElementById('subtabs-gf2').style.display = 'flex';
-	  }
-	}
-	</script>
+  <script>
+  function showSubTabs(target) {
+    document.getElementById('subtabs-priconne').style.display = 'none';
+    document.getElementById('subtabs-gf2').style.display = 'none';
 
+    if (target === 'priconne') {
+      document.getElementById('subtabs-priconne').style.display = 'flex';
+    } else if (target === 'gf2') {
+      document.getElementById('subtabs-gf2').style.display = 'flex';
+    }
+  }
+  </script>
 </body>
 </html>

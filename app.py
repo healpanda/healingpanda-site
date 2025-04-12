@@ -32,9 +32,10 @@ def index():
     else:
         guides = conn.execute('SELECT * FROM guides').fetchall()
 
-    categories = list(set([guide['category'] for guide in guides if guide['category']]))
+    # 중복 없는 main/sub 카테고리 리스트 (선택적 사용 가능)
+    main_categories = list(set([g['main_category'] for g in guides if g['main_category']]))
     conn.close()
-    return render_template('index.html', guides=guides, categories=categories, filter_type=filter_type)
+    return render_template('index.html', guides=guides, filter_type=filter_type, main_categories=main_categories)
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -45,14 +46,11 @@ def add_guide():
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
-        category = request.form['category']
-        new_category = request.form.get('new_category')
+        main_category = request.form['main_category']
+        sub_category = request.form['sub_category']
         start_date = request.form['start_date']
         end_date = request.form['end_date']
         image = request.files.get('image')
-
-        if new_category:
-            category = new_category
 
         image_filename = None
         if image and image.filename != '':
@@ -61,9 +59,9 @@ def add_guide():
 
         conn = get_db_connection()
         conn.execute('''
-            INSERT INTO guides (title, description, category, image_filename, start_date, end_date)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (title, description, category, image_filename, start_date, end_date))
+            INSERT INTO guides (title, description, image_filename, start_date, end_date, main_category, sub_category)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (title, description, image_filename, start_date, end_date, main_category, sub_category))
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
@@ -77,18 +75,15 @@ def edit_guide(guide_id):
 
     if not guide:
         return "해당 공략을 찾을 수 없습니다.", 404
-	
+
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
-        category = request.form['category']
-        new_category = request.form.get('new_category')
+        main_category = request.form['main_category']
+        sub_category = request.form['sub_category']
         start_date = request.form['start_date']
         end_date = request.form['end_date']
         image = request.files.get('image')
-
-        if new_category:
-            category = new_category
 
         image_filename = guide['image_filename']
         if image and image.filename != '':
@@ -97,9 +92,9 @@ def edit_guide(guide_id):
 
         conn.execute('''
             UPDATE guides
-            SET title = ?, description = ?, category = ?, image_filename = ?, start_date = ?, end_date = ?
+            SET title = ?, description = ?, image_filename = ?, start_date = ?, end_date = ?, main_category = ?, sub_category = ?
             WHERE id = ?
-        ''', (title, description, category, image_filename, start_date, end_date, guide_id))
+        ''', (title, description, image_filename, start_date, end_date, main_category, sub_category, guide_id))
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
