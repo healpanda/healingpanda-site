@@ -75,6 +75,9 @@ def edit_guide(guide_id):
     conn = get_db_connection()
     guide = conn.execute('SELECT * FROM guides WHERE id = ?', (guide_id,)).fetchone()
 
+    if not guide:
+        return "해당 공략을 찾을 수 없습니다.", 404
+	
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
